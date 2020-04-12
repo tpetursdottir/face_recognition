@@ -2,9 +2,7 @@
 # python pi_face_recognition.py --cascade haarcascade_frontalface_default.xml --encodings encodings.pickle
 
 # import the necessary packages
-from picamera.array import PiRGBArray
-from picamera import PiCamera
-#from imutils.video import VideoStream
+from imutils.video import VideoStream
 from imutils.video import FPS
 import face_recognition
 import argparse
@@ -27,30 +25,19 @@ print("[INFO] loading encodings + face detector...")
 data = pickle.loads(open(args["encodings"], "rb").read())
 detector = cv2.CascadeClassifier(args["cascade"])
 
-# initialize the camera and grab a reference to the raw camera capture
-camera = PiCamera()
-camera.resolution = (640, 480)
-rawCapture = PiRGBArray(camera, size=(640, 480))
-
 # initialize the video stream and allow the camera sensor to warm up
 print("[INFO] starting video stream...")
-#vs = VideoStream(usePiCamera=True).start()
+vs = VideoStream(usePiCamera=True).start()
 time.sleep(2.0)
 
 # start the FPS counter
 fps = FPS().start()
 
 # loop over frames from the video file stream
-#while True:
+while True:
 	# grab the frame from the threaded video stream and resize it
 	# to 500px (to speedup processing)
-	#frame = vs.read()
-
-# capture frames from the camera
-for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-	# grab the raw NumPy array representing the image and initialize
-	# the timestamp and occupied/unoccupied text
-	frame = f.array
+	frame = vs.read()
 	frame = imutils.resize(frame, width=500)
 	
 	# convert the input frame from (1) BGR to grayscale (for face
